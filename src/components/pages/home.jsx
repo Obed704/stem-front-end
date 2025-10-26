@@ -8,7 +8,6 @@ import GetInvolved from "../getInvolved";
 import SponsorsSection from "../sponsorSection";
 import SupportComponent from "../pages/supportComponent"
 import Footer from "../Footer";
-import ChatBolt from "../ChatBolt";
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
       <Navbar/>
       <HeroSection />
       <MissionVision />
-      <ChatBolt/>
       <ChampionsSection />
       <StatsSection />
       <TestimonialsSlider />

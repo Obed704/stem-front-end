@@ -3,7 +3,6 @@ import SistersCard from "../sisters";
 import TeamSection from "../team";
 import SponsorsSection from "../sponsorSection";
 import Footer from "../Footer";
-import ChatBolt from "../ChatBolt";
 
 function About() {
   return (
@@ -11,7 +10,6 @@ function About() {
       <Navbar bg="bg-black" />
       <SistersCard/>
       <TeamSection/>
-      <ChatBolt/>
       <SponsorsSection/>
       <Footer />
     </>

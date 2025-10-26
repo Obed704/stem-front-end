@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../Header.jsx";
 import Footer from "../Footer.jsx";
-import ChatBolt from "../ChatBolt.jsx";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // use .env
 const colors = ["#F7F42E", "#17CFDC", "#F21EA7"]; // color palette
@@ -184,7 +183,6 @@ const ContactUs = () => {
         </div>
       </section>
 
-      <ChatBolt />
       <Footer />
     </>
   );

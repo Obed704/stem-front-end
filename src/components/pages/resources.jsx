@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Header";
 import Footer from "../Footer";
-import ChatBolt from "../ChatBolt";
+
 
 const brandColors = {
   yellow: "rgb(247, 244, 46)",
@@ -16,50 +16,52 @@ const DownloadsPage = () => {
   const [loadingDownloads, setLoadingDownloads] = useState(true);
   const [loadingVideos, setLoadingVideos] = useState(true);
 
-  useEffect(() => {
-    // Fetch downloads from backend
-    const fetchDownloads = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/downloads");
-        if (!res.ok) throw new Error("Failed to fetch downloads");
-        const data = await res.json();
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // use this instead of localhost
 
-        // Prepend backend URL to image path
-        const formatted = data.map((d) => ({
-          ...d,
-          image: `http://localhost:5000/${d.image}`,
-        }));
+useEffect(() => {
+  // Fetch downloads from backend
+  const fetchDownloads = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/downloads`);
+      if (!res.ok) throw new Error("Failed to fetch downloads");
+      const data = await res.json();
 
-        setDownloads(formatted);
-      } catch (err) {
-        console.error("Error fetching downloads:", err);
-      } finally {
-        setLoadingDownloads(false);
-      }
-    };
+      // Prepend backend URL to image path
+      const formatted = data.map((d) => ({
+        ...d,
+        image: `${BACKEND_URL}/${d.image}`,
+      }));
 
-    // Fetch videos from backend
-    const fetchVideos = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/videos");
-        if (!res.ok) throw new Error("Failed to fetch videos");
-        const data = await res.json();
-        setVideos(data);
-      } catch (err) {
-        console.error("Error fetching videos:", err);
-      } finally {
-        setLoadingVideos(false);
-      }
-    };
+      setDownloads(formatted);
+    } catch (err) {
+      console.error("Error fetching downloads:", err);
+    } finally {
+      setLoadingDownloads(false);
+    }
+  };
 
-    fetchDownloads();
-    fetchVideos();
-  }, []);
+  // Fetch videos from backend
+  const fetchVideos = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/videos`);
+      if (!res.ok) throw new Error("Failed to fetch videos");
+      const data = await res.json();
+      setVideos(data);
+    } catch (err) {
+      console.error("Error fetching videos:", err);
+    } finally {
+      setLoadingVideos(false);
+    }
+  };
+
+  fetchDownloads();
+  fetchVideos();
+}, []);
+
 
   return (
     <>
       <Navbar />
-      <ChatBolt />
 
       {/* Downloads Section */}
       <section className="max-w-full mx-auto px-6 py-32 bg-blue-900">

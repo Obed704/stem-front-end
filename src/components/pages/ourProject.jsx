@@ -4,7 +4,6 @@ import RecruitingProcess from "../recruiting";
 import Footer from "../Footer";
 import EducationElements from "../educationElements";
 import ThumbnailCarousel from "../imageSlider";
-import ChatBolt from "../ChatBolt";
 function App() {
   return (
     <div className="bg-gray-400">
@@ -12,7 +11,6 @@ function App() {
       <Fll />
       <RecruitingProcess/>
       <EducationElements/>
-      <ChatBolt/>
       <ThumbnailCarousel/>
       <Footer />
     </div>

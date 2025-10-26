@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Header";
 import Footer from "../Footer";
-import ChatBolt from "../ChatBolt";
 
-const BACKEND_URL = "http://localhost:5000"; // Change if deployed
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // 🔹 Vertical and Horizontal Scrollers
 const VerticalScroller = ({ images }) => (
@@ -159,7 +158,6 @@ const FundTheirFuturePage = () => {
   return (
     <>
       <Navbar bg="bg-black" />
-      <ChatBolt />
       <div className="bg-gray-50 font-sans">
         <div className="hidden md:flex items-center justify-center gap-8 p-6 min-h-screen">
           <VerticalScroller images={leftImages} />
