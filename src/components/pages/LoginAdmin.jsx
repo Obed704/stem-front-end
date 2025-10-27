@@ -1,6 +1,9 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
 
+// Get backend URL from environment
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function AdminLogin() {
   const { login, loading } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -11,7 +14,7 @@ export default function AdminLogin() {
     e.preventDefault();
     if (!email || !password) return setError("Please fill in all fields");
 
-    const result = await login(email, password);
+    const result = await login(email, password, BACKEND_URL); // pass BACKEND_URL
     if (result.success) {
       window.location.href = "/admin-dashboard";
     } else {
