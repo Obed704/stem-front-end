@@ -2,6 +2,8 @@ import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // ✅ Load from .env file
+
 export const AuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
@@ -15,12 +17,14 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/login", {
+      const res = await fetch(`${BACKEND_URL}/api/admin/login`, { // ✅ use env URL
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         setLoading(false);
         return { success: false, message: data.message || "Login failed" };
@@ -30,10 +34,11 @@ export const AuthProvider = ({ children }) => {
       setToken(data.token);
       localStorage.setItem("token", data.token);
       localStorage.setItem("admin", JSON.stringify(data.admin));
+
       setLoading(false);
       return { success: true };
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err);
       setLoading(false);
       return { success: false, message: "Server error" };
     }
