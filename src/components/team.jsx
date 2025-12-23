@@ -1,65 +1,92 @@
 import React, { useEffect, useState } from "react";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // use .env
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const TeamSection = () => {
-  const [teamMembers, setTeam] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/api/team`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch team members");
+        }
+
         const data = await res.json();
 
-        // Prepend BACKEND_URL to images
+        // Normalize image URLs
         const formatted = data.map((member) => ({
           ...member,
-          image: `${BACKEND_URL}${member.image}`,
+          image: member.image ? `${BACKEND_URL}${member.image}` : "",
         }));
 
-        setTeam(formatted);
+        setTeamMembers(formatted);
       } catch (err) {
         console.error("Error fetching team:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchTeam();
   }, []);
 
+  if (loading) {
+    return (
+      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
+        <p className="text-gray-500">Loading team members…</p>
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-6xl mx-auto px-6 py-20 bg-gray-100">
-      <h2 className="text-3xl font-bold text-center text-primary dark:text-blue-400 mb-12">
+      <h2 className="text-3xl font-bold text-center text-primary mb-12">
         Our Team
       </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {teamMembers.map((member) => (
-          <div
-            key={member.id}
-            className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center p-5 flex flex-col items-center"
-          >
-            <img
-              src={member.image}
-              alt={member.name}
-              className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover mb-4 shadow-sm"
-            />
 
-            <h3 className="text-lg font-bold text-gray-800 mb-1 capitalize break-words text-center">
-              {member.name}
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2 capitalize break-words text-center">
-              {member.role}
-            </p>
-            {member.email && (
-              <a
-                href={`mailto:${member.email}`}
-                className="text-sm break-all text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline text-center"
-              >
-                {member.email}
-              </a>
-            )}
-          </div>
-        ))}
-      </div>
+      {teamMembers.length === 0 ? (
+        <p className="text-center text-gray-500">
+          No team members available.
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {teamMembers.map((member) => (
+            <div
+              key={member._id}
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-center p-5 flex flex-col items-center"
+            >
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover mb-4 shadow-sm"
+                onError={(e) => {
+                  e.currentTarget.src = "/avatar-placeholder.png";
+                }}
+              />
+
+              <h3 className="text-lg font-bold text-gray-800 mb-1 capitalize break-words text-center">
+                {member.name}
+              </h3>
+
+              <p className="text-sm text-gray-500 mb-2 capitalize break-words text-center">
+                {member.role}
+              </p>
+
+              {member.email && (
+                <a
+                  href={`mailto:${member.email}`}
+                  className="text-sm break-all text-blue-600 hover:text-blue-500 underline text-center"
+                >
+                  {member.email}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };
